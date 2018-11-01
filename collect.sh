@@ -46,25 +46,34 @@ while [ "$1" != "" ]; do
       dmidecode -s bios-version 	>> $CONFIG
       printf "\n" 			>> $CONFIG
       printf "IXPDIMM CLI VERSION:\n"	>> $CONFIG
-      ixpdimm-cli version 		>> $CONFIG
-      printf "AEP FW VERSION:\n"	>> $CONFIG
-      ixpdimm-cli show -dimm 		>> $CONFIG
-      printf "AEP BSR:\n"		>> $CONFIG
-      ixpdimm-cli show -d bootstatus -dimm >> $CONFIG
-      printf "AEP TOPOLOGY:\n"		>> $CONFIG
-      ixpdimm-cli show -topology 	>> $CONFIG
-      printf "AEP MEMORY RESOURCE:\n"	>> $CONFIG
-      ixpdimm-cli show -memoryresources >> $CONFIG
-      printf "AEP SYSTEM CAPABILITY:\n"	>> $CONFIG
-      ixpdimm-cli show -system -capabilities >> $CONFIG
-      printf "AEP GOAL:\n"		>> $CONFIG
-      ixpdimm-cli show -goal 		>> $CONFIG
-      printf "AEP POOL:\n"		>> $CONFIG
-      ixpdimm-cli show -pool 		>> $CONFIG
-      printf "AEP NAMESPACE:\n"		>> $CONFIG
-      ixpdimm-cli show -namespace	>> $CONFIG
-      printf "AEP PCD:\n"		>> $CONFIG
-      ixpdimm-cli show -dimm -pcd	>> $CONFIG
+      ipmctl version 		>> $CONFIG
+      printf "\n" 			>> $CONFIG
+      printf "DCPMM FW VERSION:\n"	>> $CONFIG
+      ipmctl show -dimm 		>> $CONFIG
+      printf "\n" 			>> $CONFIG
+      printf "DCPMM BSR:\n"		>> $CONFIG
+      ipmctl show -d bootstatus -dimm >> $CONFIG
+      printf "\n" 			>> $CONFIG
+      printf "DCPMM TOPOLOGY:\n"		>> $CONFIG
+      ipmctl show -topology 	>> $CONFIG
+      printf "\n" 			>> $CONFIG
+      printf "DCPMM MEMORY RESOURCE:\n"	>> $CONFIG
+      ipmctl show -memoryresources >> $CONFIG
+      printf "\n" 			>> $CONFIG
+      printf "DCPMM SYSTEM CAPABILITY:\n"	>> $CONFIG
+      ipmctl show -system -capabilities >> $CONFIG
+      printf "\n" 			>> $CONFIG
+      printf "DCPMM GOAL:\n"		>> $CONFIG
+      ipmctl show -goal 		>> $CONFIG
+      printf "\n" 			>> $CONFIG
+      printf "DCPMM REGION:\n"		>> $CONFIG
+      ipmctl show -region 		>> $CONFIG
+      printf "\n" 			>> $CONFIG
+      printf "DCPMM NAMESPACE:\n"		>> $CONFIG
+      ndctl list	>> $CONFIG
+      printf "\n" 			>> $CONFIG
+      printf "DCPMM PCD:\n"		>> $CONFIG
+      ipmctl show -dimm -pcd	>> $CONFIG
       
       # Get smbios
       dmidecode > ./$DIR/dmidecode_$VALUE.log
@@ -72,16 +81,23 @@ while [ "$1" != "" ]; do
       # Get e820/system map from dmesg
       dmesg > ./$DIR/dmesg_$VALUE.log
       
-      # Get memory resource with cli
-      ixpdimm-cli show -memoryresources > ./$DIR/memoryresources_$VALUE.log
       
-      # Get NFIT/PCAT/HMAT 
+      # Get SRAT/NFIT/PCAT/HMAT 
+      cat /sys/firmware/acpi/tables/SRAT > ./$DIR/srat_$VALUE.aml
+      iasl -d ./$DIR/srat_$VALUE.aml
+      cat /sys/firmware/acpi/tables/SLIT > ./$DIR/slit_$VALUE.aml
+      iasl -d ./$DIR/slit_$VALUE.aml
       cat /sys/firmware/acpi/tables/NFIT > ./$DIR/nfit_$VALUE.aml
       iasl -d ./$DIR/nfit_$VALUE.aml
+      ipmctl show -system nfit > ./$DIR/nfit_$VALUE.log
       cat /sys/firmware/acpi/tables/PCAT > ./$DIR/pcat_$VALUE.aml
       iasl -d ./$DIR/pcat_$VALUE.aml
+      ipmctl show -system pcat > ./$DIR/pcat_$VALUE.log
       cat /sys/firmware/acpi/tables/HMAT > ./$DIR/hmat_$VALUE.aml
       iasl -d ./$DIR/hmat_$VALUE.aml
+      cat /sys/firmware/acpi/tables/PMTT > ./$DIR/pmtt_$VALUE.aml
+      iasl -d ./$DIR/pmtt_$VALUE.aml
+      ipmctl show -system pmtt > ./$DIR/pmtt_$VALUE.log
       
       # Get meminfo
       cat /proc/meminfo > ./$DIR/meminfo_$VALUE.log

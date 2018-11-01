@@ -1,0 +1,24 @@
+#!/usr/bin/expect
+
+set dir [lindex $argv 0]
+set svr_ip [lindex $argv 1]
+set timeout 5
+
+spawn ssh -l root $svr_ip
+expect "password:"
+send "intel@123\r"
+
+#set cmd_prompt "]#"
+
+
+expect "]#"
+#send "screen\r"
+#send "/opt/intel/sep_private_5.1_linux_566376/sepdk/src/insmod-sep -g root\r"
+send "python /root/emon/emon_giveresultname.py $dir &\r"
+
+send "exit\r"
+
+
+#exit
+#expect eof
+interact

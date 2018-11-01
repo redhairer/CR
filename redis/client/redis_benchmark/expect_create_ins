@@ -1,0 +1,26 @@
+#!/usr/bin/expect
+
+set ins_no [lindex $argv 0]
+set core_no [lindex $argv 1]
+set svr_ip [lindex $argv 2]
+spawn ssh  -l root $svr_ip 
+#10.5.251.69
+
+expect_before "no)?" {
+send "yes\r" }
+sleep 1
+expect "password*"
+sleep 1
+send "intel@123\r"
+expect "]#"
+#send "ip r\r"
+
+send "sync\r"
+send "echo 3 >/proc/sys/vm/drop_caches\r"
+send "cd ~/scripts\r"
+send "./create_ins.sh $ins_no $core_no\r"
+
+sleep 20
+send "exit\r"
+interact
+

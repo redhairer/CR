@@ -1,0 +1,19 @@
+#!/usr/bin/expect
+
+set svr_ip [lindex $argv 0]
+
+
+spawn ssh -l root $svr_ip
+expect "password:"
+send "intel@123\r"
+
+#set cmd_prompt "]#"
+
+
+expect "]#"
+send "kill -TERM -`pgrep python`\r"
+send "exit\r"
+
+#exit
+#expect eof
+interact

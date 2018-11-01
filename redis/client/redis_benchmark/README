@@ -1,0 +1,5 @@
+
+./benchmark.sh <folder> <ins_no> <core_no per socket> <query_no> <SVR_IP>
+eg.
+./benchmark.sh test2 48 24 21000000 192.168.0.100
+./benchmark.sh test2 48 24 147000000 192.168.0.100

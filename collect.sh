@@ -82,7 +82,7 @@ while [ "$1" != "" ]; do
       dmesg > ./$DIR/dmesg_$VALUE.log
       
       
-      # Get SRAT/NFIT/PCAT/HMAT 
+      # Get SRAT/SLIT/NFIT/PCAT/HMAT/PMTT 
       cat /sys/firmware/acpi/tables/SRAT > ./$DIR/srat_$VALUE.aml
       iasl -d ./$DIR/srat_$VALUE.aml
       cat /sys/firmware/acpi/tables/SLIT > ./$DIR/slit_$VALUE.aml
